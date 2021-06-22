@@ -49,7 +49,7 @@ async function addUser(req, res, next) {
 
     let sql = 'insert into usersoop values (null, ?, ?, ?)'
     let params = [firstname, surname, age]
-    executeQuery(sql, params).then(console.log('executed...'))
+    executeQuery(sql, params).then()
 
     next()
 }
