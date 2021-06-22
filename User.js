@@ -1,8 +1,13 @@
 export default class User {
-    constructor({ firstname, surname, age }) {
+    constructor({ id, firstname, surname, age }) {
+        this.id = id;
         this.firstname = firstname
         this.surname = surname
         this.age = age
+    }
+
+    get userId() {
+        return this.id;
     }
 
     get userName() {

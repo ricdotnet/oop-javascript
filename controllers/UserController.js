@@ -3,6 +3,8 @@ import userStore from "../stores/users.js";
 import User from '../User.js'
 const user = express.Router()
 
+import connect from "../database/mysql.js";
+
 export default user
 
 user.post('/new', addUser, (req, res) => {
