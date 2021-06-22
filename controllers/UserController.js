@@ -3,12 +3,14 @@ import userStore from "../stores/users.js";
 import User from '../User.js'
 const user = express.Router()
 
-import connect from "../database/mysql.js";
+// import executeQuery from "../database/mysqlHelper.js";
+import executeQuery from "../database/mysqlHelper.js";
 
 export default user
 
 user.post('/new', addUser, (req, res) => {
     userStore.users.push(new User(req.newUser))
+
     res.sendStatus(200)
 })
 
@@ -23,27 +25,31 @@ user.get('/:name', getUser, (req, res) => {
 // functions below
 
 //function to add a user
-function addUser(req, res, next) {
+async function addUser(req, res, next) {
 
-    if(!req.body)
+    if (!req.body)
         return res.status(400).send({
             message: 'no body was set'
         })
 
     const firstname = req.body.firstname;
-    if(!firstname) return res.status(400).send({ message: 'no firstname was set' })
+    if (!firstname) return res.status(400).send({message: 'no firstname was set'})
 
     const surname = req.body.surname;
-    if(!surname) return res.status(400).send({ message: 'no surname was set' })
+    if (!surname) return res.status(400).send({message: 'no surname was set'})
 
     const age = req.body.age;
-    if(!age) return res.status(400).send({ message: 'no age was set' })
+    if (!age) return res.status(400).send({message: 'no age was set'})
 
     req.newUser = {
         firstname: firstname,
         surname: surname,
         age: age
     }
+
+    let sql = 'insert into usersoop values (null, ?, ?, ?)'
+    let params = [firstname, surname, age]
+    executeQuery(sql, params).then(console.log('executed...'))
 
     next()
 }

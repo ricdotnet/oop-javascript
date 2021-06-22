@@ -7,7 +7,7 @@ import {config} from "dotenv";
 config();
 
 const app = express();
-const server = http.createServer(app)
+// const server = http.createServer(app)
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -15,11 +15,17 @@ app.use(bodyParser.json())
 import routes from './routes.js'
 app.use('/', routes)
 
-pool.getConnection((error) => {
-    if(error) throw error;
+async function init() {
+    const connection = await pool();
 
-    console.log('Connected to db...')
-    server.listen(process.env.SERVER_PORT, () => {
-        console.log('Server running on port ' + process.env.SERVER_PORT)
+    connection.getConnection((error) => {
+        if(error) throw error;
+
+        console.log('Connected to db...')
+        app.listen(process.env.SERVER_PORT, () => {
+            console.log('server on... port: ' + process.env.SERVER_PORT)
+        })
     })
-})
+}
+
+init()
