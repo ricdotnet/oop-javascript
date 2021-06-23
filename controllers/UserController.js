@@ -6,6 +6,8 @@ const user = express.Router()
 // import executeQuery from "../database/mysqlHelper.js";
 import executeQuery from "../database/mysqlHelper.js";
 
+import { sendMail } from "../mail/mailer.js";
+
 export default user
 
 user.post('/new', addUser, (req, res) => {
@@ -25,7 +27,7 @@ user.get('/:name', getUser, (req, res) => {
 // functions below
 
 //function to add a user
-async function addUser(req, res, next) {
+function addUser(req, res, next) {
 
     if (!req.body)
         return res.status(400).send({
@@ -50,6 +52,11 @@ async function addUser(req, res, next) {
     let sql = 'insert into usersoop values (null, ?, ?, ?)'
     let params = [firstname, surname, age]
     executeQuery(sql, params).then()
+
+    let mailSubject = 'Test email.....'
+    let mailBody = `Hello ${firstname} \n
+    Welcome to this website. I hope you have fun.`
+    sendMail([mailSubject, mailBody])
 
     next()
 }
