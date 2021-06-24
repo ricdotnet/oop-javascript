@@ -15,10 +15,10 @@ export const transporter = nodemailer.createTransport({
 
 export function sendMail(params) {
     transporter.sendMail({
-        from: 'me@rrocha.uk',
+        from: 'Ricardo <me@rrocha.uk>',
         to: 'me@rrocha.uk',
         subject: params[0],
-        text: params[1]
+        html: params[1]
     }, (error, info) => {
         // console.log(error || info)
         if(error)

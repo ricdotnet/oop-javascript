@@ -7,6 +7,7 @@ const user = express.Router()
 import executeQuery from "../database/mysqlHelper.js";
 
 import { sendMail } from "../mail/mailer.js";
+import getMail from "../mail/getMail.js";
 
 export default user
 
@@ -20,8 +21,18 @@ user.get('/all', getUsers, (req, res) => {
     res.status(200).send(req.allUsers)
 })
 
-user.get('/:name', getUser, (req, res) => {
+user.get('/name/:name', getUser, (req, res) => {
 
+})
+
+user.get('/mail', userMail, (req, res) => {
+    let result = []
+    for(let obj in req.boxes) {
+        result.push(obj)
+    }
+
+    res.write(JSON.stringify(result))
+    res.end()
 })
 
 // functions below
@@ -54,7 +65,7 @@ function addUser(req, res, next) {
     executeQuery(sql, params).then()
 
     let mailSubject = 'Test email.....'
-    let mailBody = `Hello ${firstname} \n
+    let mailBody = `Hello ${firstname}<br>
     Welcome to this website. I hope you have fun.`
     sendMail([mailSubject, mailBody])
 
@@ -86,5 +97,14 @@ function getUser(req, res, next) {
     if(!result.length > 0)
         return res.status(200).send({ message: 'no users with that name' })
 
-    return res.status(200).send(result)
+    req.user
+}
+
+//function to get user mail
+async function userMail(req, res, next) {
+    const boxes = new Promise((resolve) => {
+        resolve(getMail())
+    })
+    req.boxes = await boxes
+    return next()
 }
